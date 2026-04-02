@@ -1,0 +1,70 @@
+name: Deploy Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install wasm-bindgen
+        run: cargo install wasm-bindgen-cli --version 0.2.114 --locked
+
+      - name: Build wasm library
+        run: cargo build --release --lib --target wasm32-unknown-unknown
+
+      - name: Assemble Pages artifact
+        run: |
+          mkdir -p dist/pages
+          cp web/index.html web/styles.css web/bootstrap.js web/favicon.svg dist/pages/
+          wasm-bindgen \
+            --target web \
+            --no-typescript \
+            --out-dir dist/pages/pkg \
+            target/wasm32-unknown-unknown/release/chess_engine.wasm
+          touch dist/pages/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/pages
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

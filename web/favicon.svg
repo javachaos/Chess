@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#23251f" />
+      <stop offset="100%" stop-color="#11130f" />
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="54" fill="url(#bg)" />
+  <rect x="20" y="20" width="216" height="216" rx="42" fill="#50525a" />
+  <rect x="36" y="36" width="184" height="184" rx="34" fill="#333438" />
+  <rect x="52" y="52" width="76" height="76" fill="#ceb996" />
+  <rect x="128" y="52" width="76" height="76" fill="#7b5d43" />
+  <rect x="52" y="128" width="76" height="76" fill="#7b5d43" />
+  <rect x="128" y="128" width="76" height="76" fill="#ceb996" />
+  <rect x="52" y="120" width="152" height="16" rx="8" fill="#90ae66" />
+  <g transform="translate(0 4)">
+    <path
+      d="M96 180h72v18H96zm8-74h56v80h-56zm-8-8h72v16H96zm4-18h16v24h-16zm28-8h16v32h-16zm28 8h16v24h-16z"
+      fill="#f7f4ec"
+    />
+    <path
+      d="M98 182h72v18H98zm8-74h56v80h-56zm-8-8h72v16H98zm4-18h16v24h-16zm28-8h16v32h-16zm28 8h16v24h-16z"
+      fill="none"
+      stroke="#141513"
+      stroke-width="6"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>

@@ -1,0 +1,273 @@
+:root {
+  color-scheme: dark;
+  --bg-top: #191913;
+  --bg-bottom: #0d100d;
+  --panel: rgba(31, 36, 29, 0.84);
+  --panel-strong: rgba(21, 24, 20, 0.92);
+  --stroke: rgba(157, 146, 120, 0.34);
+  --text: #f1eadc;
+  --muted: #beb4a1;
+  --accent: #9eb96d;
+  --accent-soft: rgba(158, 185, 109, 0.18);
+  --shadow: rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  font-family:
+    "Avenir Next",
+    "Segoe UI",
+    sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(136, 113, 75, 0.18), transparent 34%),
+    radial-gradient(circle at 18% 24%, rgba(158, 185, 109, 0.14), transparent 30%),
+    linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: auto;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 999px;
+  filter: blur(18px);
+  opacity: 0.42;
+}
+
+body::before {
+  width: 17rem;
+  height: 17rem;
+  top: 5rem;
+  right: 7vw;
+  background: rgba(145, 177, 109, 0.15);
+}
+
+body::after {
+  width: 23rem;
+  height: 23rem;
+  bottom: 2rem;
+  left: 5vw;
+  background: rgba(167, 124, 86, 0.14);
+}
+
+.page-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1380px, calc(100vw - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 2.5rem;
+}
+
+.hero {
+  margin-bottom: 1.5rem;
+  padding: 1.3rem 1.5rem 0;
+}
+
+.eyebrow,
+.card-kicker,
+.overlay-label {
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: #d4c7ae;
+}
+
+.hero h1,
+.info-card h2,
+.overlay-card h2 {
+  font-family:
+    "Iowan Old Style",
+    "Palatino Linotype",
+    "Book Antiqua",
+    "Garamond",
+    serif;
+  margin: 0;
+  line-height: 1;
+}
+
+.hero h1 {
+  font-size: clamp(3rem, 5vw, 4.9rem);
+  letter-spacing: -0.04em;
+}
+
+.lede {
+  max-width: 52rem;
+  margin: 0.9rem 0 0;
+  font-size: 1.07rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.hero-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.15rem;
+}
+
+.hero-strip span {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid rgba(170, 160, 138, 0.2);
+  border-radius: 999px;
+  background: rgba(34, 38, 31, 0.66);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  color: #e4d8bf;
+  font-size: 0.94rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20rem;
+  gap: 1.35rem;
+  align-items: start;
+}
+
+.play-surface,
+.info-card {
+  border: 1px solid var(--stroke);
+  background: linear-gradient(180deg, rgba(34, 39, 31, 0.82), rgba(22, 24, 21, 0.9));
+  box-shadow:
+    0 20px 48px var(--shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(18px);
+}
+
+.play-surface {
+  padding: 1rem;
+  border-radius: 2rem;
+}
+
+.canvas-shell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.55rem;
+  border: 1px solid rgba(183, 171, 146, 0.18);
+  background:
+    radial-gradient(circle at top, rgba(95, 126, 67, 0.2), transparent 32%),
+    linear-gradient(180deg, rgba(45, 47, 42, 0.95), rgba(15, 18, 16, 0.98));
+  min-height: clamp(680px, 82vh, 860px);
+}
+
+#chess-canvas {
+  display: block;
+  width: 100%;
+  height: clamp(680px, 82vh, 860px);
+  background: transparent;
+}
+
+.overlay-card {
+  position: absolute;
+  inset: 1rem;
+  display: grid;
+  align-content: center;
+  gap: 0.8rem;
+  padding: 2rem;
+  border-radius: 1.1rem;
+  background: linear-gradient(180deg, rgba(19, 22, 18, 0.9), rgba(12, 14, 12, 0.94));
+  border: 1px solid rgba(170, 162, 142, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.overlay-copy,
+.info-card p,
+.board-caption {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.board-caption {
+  padding: 0.95rem 0.25rem 0.15rem;
+  font-size: 0.95rem;
+}
+
+.info-column {
+  display: grid;
+  gap: 1rem;
+}
+
+.info-card {
+  padding: 1.2rem 1.15rem 1.1rem;
+  border-radius: 1.45rem;
+}
+
+.info-card h2 {
+  font-size: 1.55rem;
+  margin-bottom: 0.7rem;
+}
+
+.engine-ready [data-loading] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .info-column {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .page-shell {
+    width: min(100vw - 1rem, 1380px);
+    padding-top: 1rem;
+  }
+
+  .hero {
+    padding-inline: 0.5rem;
+  }
+
+  .play-surface {
+    padding: 0.75rem;
+    border-radius: 1.4rem;
+  }
+
+  .canvas-shell,
+  #chess-canvas {
+    min-height: 640px;
+    height: min(78vh, 760px);
+  }
+
+  .info-column {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero h1 {
+    font-size: 2.6rem;
+  }
+
+  .lede {
+    font-size: 0.98rem;
+  }
+
+  .canvas-shell,
+  #chess-canvas {
+    min-height: 600px;
+    height: min(74vh, 680px);
+  }
+
+  .overlay-card {
+    inset: 0.7rem;
+    padding: 1.35rem;
+  }
+}

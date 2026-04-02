@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chess Engine</title>
+    <meta
+      name="description"
+      content="Play a Rust chess engine in the browser with a GitHub Pages build powered by WebAssembly."
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Rust + WebAssembly</p>
+        <h1>Chess Engine</h1>
+        <p class="lede">
+          The desktop app now has a browser twin. GitHub Pages serves the same
+          Rust engine compiled to WebAssembly, wrapped in a lighter web shell.
+        </p>
+        <div class="hero-strip">
+          <span>Playable in browser</span>
+          <span>Shared engine core</span>
+          <span>GitHub Pages deploy</span>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="play-surface">
+          <div class="canvas-shell">
+            <canvas id="chess-canvas" aria-label="Chess Engine board"></canvas>
+
+            <div class="overlay-card" data-loading>
+              <p class="overlay-label">Preparing board</p>
+              <h2>Loading engine...</h2>
+              <p class="overlay-copy">
+                The WebAssembly bundle only needs a moment. Once it finishes
+                loading, the full board and control panel appear inside this
+                frame.
+              </p>
+            </div>
+
+          </div>
+
+          <p class="board-caption">
+            Browser builds search on one thread, so higher depths can feel
+            heavier than the native desktop version.
+          </p>
+        </section>
+
+        <aside class="info-column">
+          <section class="info-card">
+            <p class="card-kicker">How to play</p>
+            <h2>Same board, lighter shell</h2>
+            <p>
+              Choose your color in the right-side controls, click a piece, then
+              click a highlighted square. The in-browser UI is the same shared
+              egui app used by the desktop build.
+            </p>
+          </section>
+
+          <section class="info-card">
+            <p class="card-kicker">Deployment</p>
+            <h2>Made for GitHub Pages</h2>
+            <p>
+              A GitHub Actions workflow builds the wasm library, runs
+              `wasm-bindgen`, and publishes a static site artifact. No custom
+              server is required.
+            </p>
+          </section>
+
+          <section class="info-card">
+            <p class="card-kicker">Performance note</p>
+            <h2>Great for play, not for benchmarks</h2>
+            <p>
+              Opening moves stay snappy thanks to the book, but deep off-book
+              searches still run faster in the packaged desktop app where native
+              threads are available.
+            </p>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script type="module" src="./bootstrap.js"></script>
+  </body>
+</html>

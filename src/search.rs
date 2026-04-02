@@ -3,12 +3,14 @@ use std::{
         atomic::{AtomicBool, AtomicU64, Ordering},
         Arc,
     },
-    thread,
-    time::{Duration, Instant},
 };
+
+#[cfg(not(target_arch = "wasm32"))]
+use std::thread;
 
 use crate::game::{Game, MoveList};
 use crate::types::{Color, Move, PieceKind, Square};
+use web_time::{Duration, Instant};
 
 const INF: i32 = 1_000_000;
 const MATE_SCORE: i32 = 30_000;
@@ -293,9 +295,7 @@ impl Searcher {
         }
         self.prepare_for_search(depth, config.time_limit);
 
-        let parallelism = thread::available_parallelism()
-            .map(|parallelism| parallelism.get())
-            .unwrap_or(1);
+        let parallelism = host_parallelism();
         let parallelism = config
             .parallelism
             .unwrap_or(parallelism)
@@ -423,6 +423,7 @@ impl Searcher {
         })
     }
 
+    #[cfg(not(target_arch = "wasm32"))]
     fn search_parallel(
         &mut self,
         game: &Game,
@@ -573,6 +574,20 @@ impl Searcher {
             nodes: total_nodes,
             depth,
         })
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    fn search_parallel(
+        &mut self,
+        game: &Game,
+        depth: u8,
+        _worker_count: usize,
+        root_hint: Option<Move>,
+        alpha: i32,
+        beta: i32,
+    ) -> Option<SearchResult> {
+        let mut working = game.clone();
+        self.search_sequential(&mut working, depth, root_hint, alpha, beta)
     }
 
     pub fn evaluate(&self, game: &Game) -> i32 {
@@ -956,6 +971,7 @@ impl Searcher {
         self.history_scores = [[0; HISTORY_TABLE_SIZE]; 2];
     }
 
+    #[cfg(not(target_arch = "wasm32"))]
     fn fork_for_parallel_worker(&self) -> Self {
         Self {
             nodes: 0,
@@ -1068,6 +1084,7 @@ impl Searcher {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct RootMoveResult {
     root_index: usize,
@@ -1075,6 +1092,7 @@ struct RootMoveResult {
     score: i32,
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 impl RootMoveResult {
     fn is_better_than(self, other: Self) -> bool {
         self.score > other.score
@@ -1082,6 +1100,7 @@ impl RootMoveResult {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct ThreadSearchResult {
     best: Option<RootMoveResult>,
@@ -1119,6 +1138,20 @@ fn terminal_score_from_check(in_check: bool, ply: i32) -> i32 {
         -MATE_SCORE + ply
     } else {
         0
+    }
+}
+
+fn host_parallelism() -> usize {
+    #[cfg(target_arch = "wasm32")]
+    {
+        1
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        thread::available_parallelism()
+            .map(|parallelism| parallelism.get())
+            .unwrap_or(1)
     }
 }
 
@@ -1283,7 +1316,7 @@ mod tests {
 
         let result = game.best_move_with_config(SearchConfig {
             depth: 8,
-            time_limit: Some(std::time::Duration::ZERO),
+            time_limit: Some(Duration::ZERO),
             ..SearchConfig::default()
         });
 
